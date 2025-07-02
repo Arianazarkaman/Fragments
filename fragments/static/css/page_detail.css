@@ -1,0 +1,38 @@
+
+body {
+  background-color: #000; /* pure black background */
+  background-image: url("/static/images/walking_in_darkness.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: #f8f9fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.page-content-box {
+  background-color: rgba(50, 50, 50, 0.85);
+  max-width: 700px;
+  padding: 1.5rem;
+  border-radius: 10px;
+}
+
+.options-row {
+  display: flex;
+  justify-content: center; /* centers options horizontally */
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 3rem;
+}
+.option-box {
+  background-color: rgba(60, 60, 60, 0.85); /* darker than before */
+  min-width: 160px;
+  max-width: 240px;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+}
+
+.option-box:hover {
+  background-color: rgba(100, 100, 100, 0.95); /* slightly brighter on hover */
+}
