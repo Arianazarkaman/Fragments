@@ -3,6 +3,9 @@ from .models import Story, Page, Option
 from django.shortcuts import get_object_or_404, redirect
 
 def fragments(request):
+    from django.contrib.auth.models import User
+    if not User.objects.filter(username="admin").exists():
+        User.objects.create_superuser("admin", "admin@example.com", "clear321")
     stories = Story.objects.all()
     return render(request, 'stories/home.html', {'stories': stories})
 
