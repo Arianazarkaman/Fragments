@@ -1,30 +1,48 @@
-from django.shortcuts import render
 from .models import Story, Page, Option
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import get_user_model
+from .serializers import StorySerializer, PageSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.authentication import TokenAuthentication
 
-def fragments(request):
-    from django.contrib.auth.models import User
-    if not User.objects.filter(username="admin").exists():
-        User.objects.create_superuser("admin", "admin@example.com", "clear321")
-    stories = Story.objects.all()
-    return render(request, 'stories/home.html', {'stories': stories})
 
-def story_start(request, story_id):
-    story = get_object_or_404(Story, id=story_id)
-    
-    first_page = Page.objects.filter(story=story).order_by('id').first()
-    
-    if first_page:
-        return redirect('page_detail', page_id=first_page.id)
-    else:
-        return redirect('home')
-    
-def page_detail(request, page_id):
-    page = get_object_or_404(Page, id=page_id)
-    options = Option.objects.filter(page=page).order_by('id')
-    context = {
-        'page': page,
-        'options': options,
-    }
-    return render(request, 'stories/page_detail.html', context)
 
+class Fragments(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        queryset = Story.objects.all()
+        serializer = StorySerializer(queryset, many = True)
+        return Response(serializer.data)
+    
+
+
+class StoryStart(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, story_id):
+        story = get_object_or_404(Story, id=story_id)
+
+        first_page = Page.objects.filter(story=story).order_by('order').first()
+
+        if not first_page:
+            return Response({"detail": "No pages found for this story."}, status=status.HTTP_204_NO_CONTENT)
+
+        serializer = PageSerializer(first_page)
+
+        return Response(serializer.data)
+    
+class PageDetail(APIView):
+
+    permission_classes = [AllowAny]
+
+    def get(self, request, page_id):
+        page = get_object_or_404(Page, id=page_id)
+        options = Option.objects.filter(page=page).order_by('id')
+        serializer = PageSerializer(page)
+
+        return Response(serializer.data)

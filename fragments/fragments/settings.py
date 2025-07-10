@@ -26,7 +26,7 @@ SECRET_KEY =  os.getenv('SECRET_KEY', 'unsafe-default-key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['fragments-yysk.onrender.com']
+ALLOWED_HOSTS = ['fragments-yysk.onrender.com', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['https://fragments-yysk.onrender.com']
 
 
@@ -34,7 +34,10 @@ CSRF_TRUSTED_ORIGINS = ['https://fragments-yysk.onrender.com']
 
 INSTALLED_APPS = [
     'modeltranslation',
+    'accounts',
     'stories',
+    'rest_framework',
+    'rest_framework.authtoken',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -88,7 +92,14 @@ DATABASES = {
     }
 }
 
-
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ]
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

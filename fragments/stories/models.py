@@ -1,10 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 class Story(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -14,6 +14,7 @@ class Page(models.Model):
     story = models.ForeignKey(Story, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     content = models.TextField()
+    order = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.story.title} - {self.title}"
@@ -27,10 +28,12 @@ class Option(models.Model):
         return f"{self.page.title} -> {self.text} -> {self.next_page.title}"
 
 class UserProgress(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     story = models.ForeignKey(Story, on_delete=models.CASCADE)
     current_page = models.ForeignKey(Page, on_delete=models.CASCADE)
     last_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.user.username} in '{self.story.title}' at Page {self.current_page.id}"
+
+

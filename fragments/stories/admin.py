@@ -2,6 +2,16 @@ from django.contrib import admin
 from .models import Story, Page, Option, UserProgress
 from modeltranslation.admin import TranslationAdmin
 
+from django.contrib import admin
+from .models import Story, Page, Option, UserProgress
+from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
+
+class OptionInline(TranslationTabularInline):
+    model = Option
+    extra = 3  
+    show_change_link = True  
+    fk_name = 'page'
+
 @admin.register(Story)
 class StoryAdmin(TranslationAdmin): 
     list_display = ('title', 'author', 'created_at')
@@ -11,6 +21,9 @@ class StoryAdmin(TranslationAdmin):
 class PageAdmin(TranslationAdmin):  
     list_display = ('title', 'story')
     search_fields = ('title', 'story__title')
+    list_filter = ('story',)
+    inlines = [OptionInline] 
+
 
 @admin.register(Option)
 class OptionAdmin(TranslationAdmin):
