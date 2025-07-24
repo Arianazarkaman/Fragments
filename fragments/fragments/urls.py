@@ -11,11 +11,12 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('api/', include('stories.urls')),  
-    path('', include('stories.urls')),
+    path('fragments/', include('stories.urls')),
     path('api/accounts/', include('accounts.urls')),
-
+    path('', include('portfolio.urls')),
 )
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -63,3 +63,8 @@ class Dashboard(APIView):
             "user": user.username,  
             "message": "Welcome to your story land"
         })
+
+class pci(APIView):
+    def post():
+        
+        return Response("hello")

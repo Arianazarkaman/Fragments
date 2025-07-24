@@ -2,8 +2,6 @@ from django.contrib import admin
 from .models import Story, Page, Option, UserProgress
 from modeltranslation.admin import TranslationAdmin
 
-from django.contrib import admin
-from .models import Story, Page, Option, UserProgress
 from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
 
 class OptionInline(TranslationTabularInline):

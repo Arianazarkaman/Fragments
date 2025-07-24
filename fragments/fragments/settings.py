@@ -26,7 +26,7 @@ SECRET_KEY =  os.getenv('SECRET_KEY', 'unsafe-default-key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['fragments-yysk.onrender.com', '127.0.0.1']
+ALLOWED_HOSTS = ['fragments-yysk.onrender.com', '127.0.0.1', 'localhost']
 CSRF_TRUSTED_ORIGINS = ['https://fragments-yysk.onrender.com']
 
 
@@ -34,9 +34,11 @@ CSRF_TRUSTED_ORIGINS = ['https://fragments-yysk.onrender.com']
 
 INSTALLED_APPS = [
     'modeltranslation',
+    'portfolio',
     'accounts',
     'stories',
     'rest_framework',
+    'corsheaders',
     'rest_framework.authtoken',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,6 +55,7 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -93,13 +96,18 @@ DATABASES = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
+'DEFAULT_AUTHENTICATION_CLASSES': [
+    'rest_framework.authentication.TokenAuthentication',
+],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ]
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080", 
+    "http://127.0.0.1:8080",
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -155,3 +163,14 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MODELTRANSLATION_FALLBACK_LANGUAGES = {
+    'default': ('fa', 'en'), 
+}
+
+
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
